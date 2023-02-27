@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useSnakeStore} from "../../stores/snakeStore";
 import Button from '../buttons/Button';
-import {useInterval, Direction, getRandomPosition, isOutOfBounds, createEmptyBoard} from "./gameUtils";
+import {useInterval, Direction, getRandomPosition, isOutOfBounds, createEmptyBoard, getNextFoodCell} from "./gameUtils";
 import Snake from './snakeClass';
 import Title from "../typography/Title";
 
@@ -49,7 +49,6 @@ const PlayingField = ({width, height}: Props) => {
 
     const handleGameOver = () => {
         setRunning(false);
-        if (score > highScore) setHighScore(score);
         setScore(0);
         setSnake(new Snake());
         setFields(createEmptyBoard(boardDimensions));
@@ -70,9 +69,10 @@ const PlayingField = ({width, height}: Props) => {
     }
 
     const handleFoodConsumption = () => {
-        setFood(getRandomPosition(boardDimensions));
+        setFood(getNextFoodCell(boardDimensions, snake.getBody()));
         snake.grow();
         setScore(score + pointsAddition());
+        if (score > highScore) setHighScore(score);
     }
 
     const pointsAddition = () => {

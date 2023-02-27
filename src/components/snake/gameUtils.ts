@@ -47,6 +47,13 @@ export function getRandomPosition(boardDimensions: BoardDimensions): Cell {
   return {row: row, col: col};
 }
 
+export function getNextFoodCell(boardDimensions: BoardDimensions, snakeBody: Cell[]): Cell {
+  let foodCell = getRandomPosition(boardDimensions);
+  while (snakeBody.some(cell => cell.row === foodCell.row && cell.col === foodCell.col)) {
+    foodCell = getRandomPosition(boardDimensions);
+  }
+  return foodCell;
+}
 
 export function isOutOfBounds(coords: Cell, boardDimensions: BoardDimensions): boolean {
   const {row, col} = coords;

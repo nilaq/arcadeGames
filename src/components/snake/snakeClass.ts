@@ -36,6 +36,8 @@ export class Snake {
     }
 
     setDirection(direction: Direction): void {
+        if (this.direction === getOppositeDirection(direction))
+            return;
         this.direction = direction;
     }
 
