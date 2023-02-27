@@ -66,13 +66,13 @@ const PlayingField = ({width, height}: Props) => {
         if (snake.getHead().row === food.row && snake.getHead().col === food.col)
             handleFoodConsumption();
         updateFields()
+        if (score > highScore) setHighScore(score);
     }
 
     const handleFoodConsumption = () => {
         setFood(getNextFoodCell(boardDimensions, snake.getBody()));
         snake.grow();
         setScore(score + pointsAddition());
-        if (score > highScore) setHighScore(score);
     }
 
     const pointsAddition = () => {
