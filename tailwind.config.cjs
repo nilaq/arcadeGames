@@ -2,7 +2,16 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+
+    extend: {
+      colors: {
+        'lime': '#C7EF00',
+        'vermillion': '#FF312E',
+        'jet': '#333138',
+        'dwhite': '#FBFBFB',
+      },
+    },
   },
-  plugins: [],
+  // @ts-ignore
+  plugins: [require("tailwindcss-animate")],
 };
