@@ -71,6 +71,7 @@ export function getOppositeDirection(direction: Direction): Direction {
 }
 
 export function getCoordsInDirection(coords: Cell, direction: Direction) {
+  coords = {...coords};
   if (direction === Direction.UP) coords.row--;
   if (direction === Direction.DOWN) coords.row++;
   if (direction === Direction.LEFT) coords.col--;

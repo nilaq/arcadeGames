@@ -38,6 +38,10 @@ export class Snake {
     setDirection(direction: Direction): void {
         if (this.direction === getOppositeDirection(direction))
             return;
+        const nextHead = getCoordsInDirection(this.getHead(), direction);
+        const prevHead = this.body.head.back;
+        if (prevHead && nextHead.row === prevHead.value.row && nextHead.col === prevHead.value.col)
+            return;
         this.direction = direction;
     }
 
