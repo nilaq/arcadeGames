@@ -80,6 +80,7 @@ const PlayingField = ({width, height}: Props) => {
             case 400: return 5;
             case 200: return 10;
             case 100: return 15;
+            case 50: return 20
             default: return 5;
         }
     }
@@ -94,6 +95,10 @@ const PlayingField = ({width, height}: Props) => {
             case 'ArrowRight': snake.setDirection(Direction.RIGHT); break;
             case 'ArrowUp':    snake.setDirection(Direction.UP); break;
             case 'ArrowDown':  snake.setDirection(Direction.DOWN); break;
+            case 'a':  snake.setDirection(Direction.LEFT); break;
+            case 'd': snake.setDirection(Direction.RIGHT); break;
+            case 'w':    snake.setDirection(Direction.UP); break;
+            case 's':  snake.setDirection(Direction.DOWN); break;
         }
     }
 
@@ -120,6 +125,7 @@ const PlayingField = ({width, height}: Props) => {
                         <Button variant="subtle" className="w-28 h-12 text-xl text-black border-2 border-black bg-transparent" onClick={() => {handleGameStart(300)}}>Slow</Button>
                         <Button variant="subtle" className="w-28 h-12 text-xl text-black border-2 border-black bg-transparent" onClick={() => {handleGameStart(200)}}>Medium</Button>
                         <Button variant="subtle" className="w-28 h-12 text-xl text-black border-2 border-black bg-transparent" onClick={() => {handleGameStart(100)}}>Fast</Button>
+                        <Button variant="subtle" className="w-28 h-12 text-xl text-black border-2 border-black bg-transparent" onClick={() => {handleGameStart(50)}}>UltraFast</Button>
                     </div>
                 </div>
             }
