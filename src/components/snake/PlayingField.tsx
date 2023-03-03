@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSnakeStore} from "../../stores/snakeStore";
 import Button from '../buttons/Button';
 import {useInterval, Direction, getRandomPosition, isOutOfBounds, createEmptyBoard, getNextFoodCell} from "./gameUtils";
 import Snake from './snakeClass';
 import Title from "../typography/Title";
+import Cookie from 'js-cookie';
 
 interface Props {
     width: number;
@@ -22,6 +23,7 @@ const PlayingField = ({width, height}: Props) => {
     const [snake, setSnake] = useState(new Snake());
     const [food, setFood] = useState(getRandomPosition(boardDimensions));
     const [speed, setSpeed] = useState(500);
+    //const [highScore1, setHighScore1] = useState(Cookie.get("highScore") ? JSON.parse(Cookie.get("highScore") as string) : 0);
 
     const {
         isRunning,
@@ -31,6 +33,19 @@ const PlayingField = ({width, height}: Props) => {
         highScore,
         setHighScore
     } = useSnakeStore((state) => state);
+
+    useEffect(() => {
+        const persistedHighScore = Cookie.get("highScore");
+        if (persistedHighScore) {
+            setHighScore(JSON.parse(persistedHighScore));
+        }
+    }, [])
+
+    useEffect(() => {
+        if (highScore > 0) {
+            Cookie.set("highScore", JSON.stringify(highScore));
+        }
+    }, [highScore])
 
     const updateFields = () => {
         const newFields = createEmptyBoard(boardDimensions);
