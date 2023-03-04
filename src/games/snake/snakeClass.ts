@@ -1,4 +1,4 @@
-import {Cell, Direction, getCoordsInDirection, getOppositeDirection} from "./gameUtils";
+import {Cell, Direction, getCoordsInDirection, getOppositeDirection} from "../lib/gameUtils";
 
 
 // creating a Linked List pattern to represent the snake's body

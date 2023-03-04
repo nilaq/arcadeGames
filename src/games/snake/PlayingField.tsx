@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useSnakeStore} from "../../stores/snakeStore";
-import Button from '../buttons/Button';
-import {useInterval, Direction, getRandomPosition, isOutOfBounds, createEmptyBoard, getNextFoodCell} from "./gameUtils";
+import Button from '../../components/buttons/Button';
+import {getNextFoodCell} from "./gameUtils";
+import {useInterval, createEmptyBoard, getRandomPosition, isOutOfBounds, BoardDimensions, Direction } from "../lib/gameUtils";
 import Snake from './snakeClass';
-import Title from "../typography/Title";
+import Title from "../../components/typography/Title";
 import Cookie from 'js-cookie';
 
 interface Props {
