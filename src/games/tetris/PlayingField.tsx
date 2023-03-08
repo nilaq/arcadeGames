@@ -3,8 +3,7 @@ import {createEmptyBoard} from "./gameUtils";
 import Button from "../../components/buttons/Button";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import {GameState} from "./GameState";
-import {BlockType} from "./Blocks";
-import {Direction} from "../lib/gameUtils";
+import {useInterval} from "../lib/gameUtils";
 
 interface Props {
     width: number;
@@ -32,22 +31,25 @@ const PlayingField = ({width, height}: Props) => {
     }
     const [fields, setFields] = useState<string[][]>(createEmptyBoard(boardDimensions));
     const [gameState, setGameState] = useState(new GameState(boardDimensions));
+    const [speed, setSpeed] = useState(500);
 
-    const [update, setUpdate] = useState(false);
+    // react to key movements
+    useInterval(() => {
+        setFields(gameState.fields);
+        setScore(gameState.score);
+        if (gameState.score > highScore) setHighScore(gameState.score);
+    }, 50)
 
-    useEffect(() => {
-        if (update) {
-            setFields(gameState.fields);
-            setUpdate(false)
-        }
-    }, [gameState, update])
+    // automatically move down
+    useInterval(() => {
+        gameState.moveDown();
+        setSpeed(Math.max(600 - gameState.score * 0.5, 200));
+    }, speed)
 
-    //useInterval(moveSnake, isRunning ? speed : null)
-
-    const handleGameStart = (speed: number) => {
+    const handleGameStart = () => {
+        gameState.reset();
+        setNextBlock(gameState.nextBlockType);
         setRunning(true);
-        setScore(0);
-        setFields(createEmptyBoard(boardDimensions));
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -57,23 +59,16 @@ const PlayingField = ({width, height}: Props) => {
             case 'ArrowUp':    gameState.rotate(); break;
             case 'ArrowDown':  gameState.moveDown(); break;
         }
-        if (!update) setUpdate(true);
-        console.log(update)
     }
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
-        if (!gameState.initialized) {
-            gameState.addBlock()
-            setNextBlock(gameState.nextBlockType)
-        }
-        setUpdate(true);
     }, [])
 
     return (
         <div id="field" className="bg-gray-200 outline-4 outline outline-gray-700 flex flex-wrap"
              style={{width: width, height: height}}>
-            {fields.map((row, rowIdx) => (
+            {isRunning && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row">
                     {row.map((cellValue, cellIdx) => {
                         return <div key={cellIdx} className={`${cellValue}`} style={
@@ -85,6 +80,7 @@ const PlayingField = ({width, height}: Props) => {
                     })}
                 </div>
             ))}
+            {!isRunning && <Button onClick={() => handleGameStart()}>Start</Button>}
         </div>
     );
 };
