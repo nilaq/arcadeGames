@@ -17,6 +17,13 @@ export enum Direction {
     RIGHT = 'right',
 }
 
+export enum GameStatus {
+    RUNNING = 'running',
+    PAUSED = 'paused',
+    GAME_OVER = 'game_over',
+    READY = 'ready',
+}
+
 export function createEmptyBoard(boardDimensions: BoardDimensions): number[][] {
     const board: number[][] = [];
     for (let row = 0; row < boardDimensions.rows; row++)

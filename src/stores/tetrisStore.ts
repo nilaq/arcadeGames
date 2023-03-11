@@ -1,13 +1,11 @@
 import {create} from 'zustand';
 import {BlockFactory, BlockType} from "../games/tetris/Blocks";
+import {GameStatus} from "../games/lib/gameUtils";
 
 export interface TetrisState {
     squareSize: number;
-    isRunning: boolean;
-    setRunning: (isRunning: boolean) => void;
-
-    isPaused: boolean;
-    setPaused: (isPaused: boolean) => void;
+    gameStatus: GameStatus
+    setGameStatus: (gameStatus: GameStatus) => void;
 
     // The snake's current score
     score: number;
@@ -18,19 +16,17 @@ export interface TetrisState {
 
     nextBlock: BlockType | undefined;
 
-    setNextBlock: (nextBlock: BlockType) => void;
+    setNextBlock: (nextBlock: BlockType | undefined) => void;
 }
 
 export const useTetrisStore = create<TetrisState>()((set) => ({
-    squareSize: 30,
-    isRunning: false,
-    setRunning: (isRunning: boolean) => set({isRunning: isRunning}),
-    isPaused: false,
-    setPaused: (isPaused: boolean) => set({isPaused: isPaused}),
+    squareSize: 25,
+    gameStatus: GameStatus.READY,
+    setGameStatus: (gameStatus: GameStatus) => set({gameStatus: gameStatus}),
     score: 0,
     setScore: (score: number) => set({score: score}),
     highScore: 0,
     setHighScore: (highScore: number) => set({highScore: highScore}),
     nextBlock: undefined,
-    setNextBlock: (nextBlock: BlockType) => set({nextBlock: nextBlock})
+    setNextBlock: (nextBlock: BlockType | undefined) => set({nextBlock: nextBlock})
 }));

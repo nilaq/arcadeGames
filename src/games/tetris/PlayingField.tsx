@@ -3,7 +3,7 @@ import {createEmptyBoard} from "./gameUtils";
 import Button from "../../components/buttons/Button";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import {GameState} from "./GameState";
-import {useInterval} from "../lib/gameUtils";
+import {GameStatus, useInterval} from "../lib/gameUtils";
 
 interface Props {
     width: number;
@@ -15,8 +15,8 @@ const PlayingField = ({width, height}: Props) => {
 
     const {
         squareSize,
-        isRunning,
-        setRunning,
+        gameStatus,
+        setGameStatus,
         score,
         setScore,
         highScore,
@@ -31,7 +31,7 @@ const PlayingField = ({width, height}: Props) => {
     }
     const [fields, setFields] = useState<string[][]>(createEmptyBoard(boardDimensions));
     const [gameState, setGameState] = useState(new GameState(boardDimensions));
-    const [speed, setSpeed] = useState(500);
+    const [speed, setSpeed] = useState<number | null>(600);
 
     // react to key movements
     useInterval(() => {
@@ -42,14 +42,26 @@ const PlayingField = ({width, height}: Props) => {
 
     // automatically move down
     useInterval(() => {
-        gameState.moveDown();
-        setSpeed(Math.max(600 - gameState.score * 0.5, 200));
-    }, speed)
+        if (gameState.gameOver) {
+            handleGameOver()
+        } else {
+            setNextBlock(gameState.nextBlockType);
+            gameState.moveDown();
+            setSpeed(Math.max(600 - gameState.score * 0.5, 200));
+        }
+    }, gameStatus !== GameStatus.PAUSED ? speed : null)
 
     const handleGameStart = () => {
         gameState.reset();
         setNextBlock(gameState.nextBlockType);
-        setRunning(true);
+        setSpeed(600);
+        setGameStatus(GameStatus.RUNNING);
+    }
+
+    const handleGameOver = () => {
+        setGameState(new GameState(boardDimensions));
+        setGameStatus(GameStatus.GAME_OVER);
+        setSpeed(null)
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,12 +75,15 @@ const PlayingField = ({width, height}: Props) => {
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
-    }, [])
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [gameStatus])
 
     return (
-        <div id="field" className="bg-gray-200 outline-4 outline outline-gray-700 flex flex-wrap"
+        <div id="field" className="bg-gradient-to-b from-tetris-purple to-tetris-dark-blue flex flex-wrap"
              style={{width: width, height: height}}>
-            {isRunning && fields.map((row, rowIdx) => (
+            {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row">
                     {row.map((cellValue, cellIdx) => {
                         return <div key={cellIdx} className={`${cellValue}`} style={
@@ -80,7 +95,23 @@ const PlayingField = ({width, height}: Props) => {
                     })}
                 </div>
             ))}
-            {!isRunning && <Button onClick={() => handleGameStart()}>Start</Button>}
+            {gameStatus !== GameStatus.RUNNING &&
+                <div className="flex flex-col justify-center items-center w-full h-full">
+                    {gameStatus === GameStatus.READY &&
+                        <>
+                            <div className="text-4xl font-bold text-white">Beat your highscore!</div>
+                            <Button onClick={handleGameStart} className="mt-4">Start</Button>
+                        </>
+                    }
+                    {gameStatus === GameStatus.GAME_OVER &&
+                        <>
+                            <div className="text-4xl font-bold text-gray-700">Game Over!</div>
+                            <div className="text-2xl font-bold text-gray-700">Score: {score}</div>
+                            <Button onClick={handleGameStart} className="mt-4">Play again</Button>
+                        </>
+                    }
+                </div>
+            }
         </div>
     );
 };

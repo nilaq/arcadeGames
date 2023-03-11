@@ -70,25 +70,16 @@ export abstract class Block {
         // @ts-ignore
         this._shape = this._shapes[(this._shapes.indexOf(this._shape) - 1) % this._shapes.length];
     }
-
-/*
-            abstract canMoveLeft(board: number[][]): boolean;
-
-            abstract canMoveRight(board: number[][]): boolean;
-
-            abstract canMoveDown(board: number[][]): boolean;
-        }
-
- */
 }
 
 export class LBlock extends Block {
     constructor(x: number, y: number) {
         const shapes = [
-            [[1, 0], [1, 0], [1, 1]],
-            [[1, 1, 1], [0, 0, 1]],
-            [[1, 1], [1, 0], [1, 0]],
-            [[1, 0, 0], [1, 1, 1]]
+            [[1, 0, 0], [1, 1, 1]],
+            [[0, 1, 1], [0, 1, 0], [0, 1, 0]],
+            [[0, 0, 0], [1, 1, 1], [0, 0, 1]],
+            [[0, 1], [0, 1], [1, 1]],
+
         ];
         super(x, y, 'bg-w-blue', shapes);
     }
@@ -99,10 +90,10 @@ export class JBlock extends Block {
 
     constructor(x: number, y: number) {
         const shapes = [
-            [[1, 0], [1, 0], [1, 1]],
-            [[1, 1, 1], [1, 0, 0]],
+            [[0, 0, 1], [1, 1, 1]],
+            [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
+            [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
             [[1, 1], [0, 1], [0, 1]],
-            [[0, 0, 1], [1, 1, 1]]
         ];
         super(x, y, 'bg-w-orange', shapes);
     }
@@ -117,25 +108,27 @@ export class OBlock extends Block {
     }
 }
 
+export class TBlock extends Block {
+    constructor(x: number, y: number) {
+        const shapes = [
+            [[0, 1, 0], [1, 1, 1]],
+            [[0, 1, 0], [0, 1, 1], [0, 1, 0]],
+            [[0, 0, 0], [1, 1, 1], [0, 1, 0]],
+            [[0, 1], [1, 1], [0, 1]]
+        ];
+        super(x, y, 'bg-w-purple', shapes);
+    }
+}
+
 export class SBlock extends Block {
     constructor(x: number, y: number) {
         const shapes = [
             [[0, 1, 1], [1, 1, 0]],
-            [[1, 0], [1, 1], [0, 1]]
+            [[0, 1, 0], [0, 1, 1], [0, 0, 1]],
+            [[0, 0, 0],[0, 1, 1], [1, 1, 0]],
+            [[1, 0], [1, 1], [0, 1]],
         ];
         super(x, y, 'bg-w-green', shapes);
-    }
-}
-
-export class TBlock extends Block {
-    constructor(x: number, y: number) {
-        const shapes = [
-            [[1, 1, 1], [0, 1, 0]],
-            [[1, 0], [1, 1], [1, 0]],
-            [[0, 1, 0], [1, 1, 1]],
-            [[0, 1], [1, 1], [0, 1]]
-        ];
-        super(x, y, 'bg-w-purple', shapes);
     }
 }
 
@@ -143,7 +136,9 @@ export class ZBlock extends Block {
     constructor(x: number, y: number) {
         const shapes = [
             [[1, 1, 0], [0, 1, 1]],
-            [[0, 1], [1, 1], [1, 0]]
+            [[0, 0, 1], [0, 1, 1], [0, 1, 0]],
+            [[0, 0, 0],[1, 1, 0], [0, 1, 1]],
+            [[0, 1], [1, 1], [1, 0]],
         ];
         super(x, y, 'bg-w-red', shapes);
     }
@@ -152,8 +147,10 @@ export class ZBlock extends Block {
 export class IBlock extends Block {
     constructor(x: number, y: number) {
         const shapes = [
-            [[1], [1], [1], [1]],
-            [[1, 1, 1, 1]]
+            [[0,1], [0,1], [0,1], [0,1]],
+            [[0,0,0,0],[1, 1, 1, 1]],
+            [[0,0,1], [0,0,1], [0,0,1], [0,0,1]],
+            [[0,0,0,0],[0,0,0,0], [1,1,1,1]],
         ];
         super(x, y, 'bg-w-aqua', shapes);
     }

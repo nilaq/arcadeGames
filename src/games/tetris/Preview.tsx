@@ -24,16 +24,16 @@ const Preview = ({width, height}: PreviewProps) => {
     }, [nextBlock])
 
     return (
-        <div className="bg-gray-200 outline-4 outline outline-gray-700 flex flex-col p-3"
+        <div className="flex flex-col items-center justify-center rounded-r-xl bg-gradient-to-br from-tetris-purple to-w-purple"
              style={{width: width, height: height}}>
-            <Title className="text-xl font-light">Next up:</Title>
+            <Title className="text-white">Next up:</Title>
             <div className="h-full flex flex-col justify-center items-center">
                 {block && block.shape.map((row, i) => (
                     <div key={i} className="row flex flex-row">
                         {row.map((cellValue, j) => {
-                            return <div key={j} className={`${cellValue === 1 ? block.color : 'transparent'}`} style={{
-                                width: squareSize,
-                                height: squareSize
+                            return <div key={j} className={`${cellValue === 1 ? 'white' : 'transparent'}`} style={{
+                                width: 10,
+                                height: 10
                             }}></div>;
                         })}
                     </div>
