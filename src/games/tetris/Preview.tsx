@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../components/typography/Title";
 import {useTetrisStore} from "../../stores/tetrisStore";
-import {Block, BlockFactory, BlockType} from "./Blocks";
+import {Block, BlockFactory} from "./Blocks";
 
 interface PreviewProps {
     width: number;
@@ -11,9 +11,7 @@ interface PreviewProps {
 const Preview = ({width, height}: PreviewProps) => {
 
     const {
-        nextBlocks,
-        setNextBlocks,
-        squareSize
+        nextBlocks
     } = useTetrisStore((state) => state);
 
     const [blocks, setBlocks] = useState<Block[]>();
@@ -32,13 +30,7 @@ const Preview = ({width, height}: PreviewProps) => {
                 {blocks && blocks.map((block, index) => {
                     return (
                         <div className="flex flex-row justify-center items-center" key={index}>
-                            {block.shape.map((row, i) => {
-                                <div key={i} className="row flex flex-row">
-                                    {row.map((cellValue, j) => {
-                                        return <div key={j} className={`${cellValue === 1 ? 'w-[10px] h-[10px] bg-white' : 'transparent'}`}></div>;
-                                    })}
-                                </div>
-                            })}
+
                         </div>
                     )
                 })}
@@ -49,3 +41,13 @@ const Preview = ({width, height}: PreviewProps) => {
 };
 
 export default Preview;
+
+/*
+{block.shape.map((row, i) => {
+                                <div key={i} className="row flex flex-row">
+                                    {row.map((cellValue, j) => {
+                                        return <div key={j} className={`${cellValue === 1 ? 'w-[10px] h-[10px] bg-white' : 'transparent'}`}></div>;
+                                    })}
+                                </div>
+                            })}
+ */
