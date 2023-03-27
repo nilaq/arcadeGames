@@ -1,8 +1,8 @@
 import React from 'react';
-import Title from '../typography/Title';
+import Title from '../../components/typography/Title';
 import PlayingField from './PlayingField';
 import {useSnakeStore} from "../../stores/snakeStore";
-import Button from '../buttons/Button';
+import Button from '../../components/buttons/Button';
 
 
 const Snake = () => {
