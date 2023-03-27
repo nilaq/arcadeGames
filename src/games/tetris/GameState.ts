@@ -9,7 +9,7 @@ export class GameState {
     private _currentBlock: Block;
     private readonly mid: number;
 
-    private _nextBlock: BlockType | undefined;
+    private _nextBlocks: BlockType[];
 
     private _score = 0;
     private _gameOver = false;
@@ -18,13 +18,14 @@ export class GameState {
         this._dimensions = dim;
         this._fields = Array.from({ length: dim.rows }, () => Array.from({ length: dim.cols }, () => ""));
         this.mid = Math.floor(dim.cols / 2);
+        this._nextBlocks = [];
     }
 
     reset() {
         this._fields = Array.from({ length: this._dimensions.rows }, () => Array.from({ length: this._dimensions.cols }, () => ""));
         this._score = 0;
         this._gameOver = false;
-        this._nextBlock = BlockFactory.getRandomBlockType();
+        this._nextBlocks = [BlockFactory.getRandomBlockType(), BlockFactory.getRandomBlockType(), BlockFactory.getRandomBlockType()];
         this.addBlock()
     }
 
@@ -53,8 +54,8 @@ export class GameState {
         return fields;
     }
 
-    get nextBlockType() {
-        return this._nextBlock;
+    get nextBlockTypes() {
+        return this._nextBlocks;
     }
 
     addBlock() {
@@ -62,8 +63,9 @@ export class GameState {
             this._gameOver = true;
             return;
         }
-        this._currentBlock = BlockFactory.createBlock(this.mid, 0, this._nextBlock ? this._nextBlock : BlockFactory.getRandomBlockType());
-        this._nextBlock = BlockFactory.getRandomBlockType();
+        // @ts-ignore
+        this._currentBlock = BlockFactory.createBlock(this.mid, 0, this._nextBlocks[0] ? this._nextBlocks.shift() : BlockFactory.getRandomBlockType());
+        this._nextBlocks.push(BlockFactory.getRandomBlockType());
     }
 
     checkGameOver(): boolean {

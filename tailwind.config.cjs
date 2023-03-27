@@ -4,6 +4,9 @@ module.exports = {
   theme: {
 
     extend: {
+      fontFamily: {
+        'sans': ['var(--font-jost)'],
+      },
       colors: {
         'lime': '#C7EF00',
         'vermillion': '#FF312E',

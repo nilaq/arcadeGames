@@ -14,9 +14,9 @@ export interface TetrisState {
     highScore: number;
     setHighScore: (highScore: number) => void;
 
-    nextBlock: BlockType | undefined;
+    nextBlocks: BlockType[];
 
-    setNextBlock: (nextBlock: BlockType | undefined) => void;
+    setNextBlocks: (nextBlock: BlockType[]) => void;
 }
 
 export const useTetrisStore = create<TetrisState>()((set) => ({
@@ -27,6 +27,6 @@ export const useTetrisStore = create<TetrisState>()((set) => ({
     setScore: (score: number) => set({score: score}),
     highScore: 0,
     setHighScore: (highScore: number) => set({highScore: highScore}),
-    nextBlock: undefined,
-    setNextBlock: (nextBlock: BlockType | undefined) => set({nextBlock: nextBlock})
+    nextBlocks: [],
+    setNextBlocks: (nextBlocks: BlockType[]) => set({nextBlocks: nextBlocks})
 }));

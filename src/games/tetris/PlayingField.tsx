@@ -21,8 +21,8 @@ const PlayingField = ({width, height}: Props) => {
         setScore,
         highScore,
         setHighScore,
-        nextBlock,
-        setNextBlock
+        nextBlocks,
+        setNextBlocks
     } = useTetrisStore((state) => state);
 
     const boardDimensions = {
@@ -45,7 +45,7 @@ const PlayingField = ({width, height}: Props) => {
         if (gameState.gameOver) {
             handleGameOver()
         } else {
-            setNextBlock(gameState.nextBlockType);
+            setNextBlocks(gameState.nextBlockTypes);
             gameState.moveDown();
             setSpeed(Math.max(600 - gameState.score * 0.5, 200));
         }
@@ -53,7 +53,7 @@ const PlayingField = ({width, height}: Props) => {
 
     const handleGameStart = () => {
         gameState.reset();
-        setNextBlock(gameState.nextBlockType);
+        setNextBlocks(gameState.nextBlockTypes);
         setSpeed(600);
         setGameStatus(GameStatus.RUNNING);
     }

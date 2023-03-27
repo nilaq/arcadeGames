@@ -4,6 +4,7 @@ import PlayingField from './PlayingField';
 import {useTetrisStore} from "../../stores/tetrisStore";
 import Preview from "./Preview";
 import {GameStatus} from "../lib/gameUtils";
+import PauseButton from "./PauseButton";
 
 
 const Tetris = () => {
@@ -11,15 +12,6 @@ const Tetris = () => {
     const {
         score, highScore, gameStatus, setGameStatus
     } = useTetrisStore((state) => state);
-
-    /*
-    {gameStatus === GameStatus.RUNNING &&
-                            <Button onClick={() => setGameStatus(GameStatus.PAUSED)} className="mt-4">Pause</Button>
-                        }
-                        {gameStatus === GameStatus.PAUSED &&
-                            <Button onClick={() => setGameStatus(GameStatus.RUNNING)} className="mt-4">Resume</Button>
-                        }
-     */
 
     const handlePause = () => {
         if (gameStatus === GameStatus.RUNNING) {
@@ -32,34 +24,12 @@ const Tetris = () => {
     return (
         <div className="w-full h-full flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center">
-                <Title className="text-5xl pb-10">Tetris</Title>
+                <Title className="text-5xl pb-10 font-bold">Tetris</Title>
                 <div className="flex flex-row justify-center gap-0 items-start">
 
-
-                    <button onClick={handlePause} className="mt-10 flex flex-col items-center justify-center h-[90px] w-[75px] gap-2 rounded-l-xl
-                        bg-gradient-to-bl from-tetris-red to-[#D80259]">
-                        {gameStatus === GameStatus.RUNNING &&
-                            <>
-                                <Title className="text-white">Pause</Title>
-                                <div className="flex flex-row gap-[6px]">
-                                    <div className="h-[20px] w-[6px] rounded-[1px] bg-white"></div>
-                                    <div className="h-[20px] w-[6px] rounded-[1px] bg-white"></div>
-                                </div>
-                            </>
-                        }
-                        {gameStatus === GameStatus.PAUSED &&
-                            <>
-                                <Title className="text-white">Resume</Title>
-                                <div className="w-0 h-0" style={{
-                                    borderTop: "12px solid transparent",
-                                    borderBottom: "12px solid transparent",
-                                    borderLeft: "20px solid white"
-                                }}>
-                                </div>
-
-                            </>
-                        }
-                    </button>
+                    {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) &&
+                        <PauseButton></PauseButton>
+                    }
 
                     <div className="flex flex-col">
                         <div className="h-full flex flex-row">
