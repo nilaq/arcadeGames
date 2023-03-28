@@ -18,6 +18,7 @@ export enum Direction {
 }
 
 export enum GameStatus {
+    LOADED = 'loaded',
     RUNNING = 'running',
     PAUSED = 'paused',
     GAME_OVER = 'game_over',
@@ -64,8 +65,7 @@ export function getRandomPosition(boardDimensions: BoardDimensions): Cell {
 export function isOutOfBounds(coords: Cell, boardDimensions: BoardDimensions): boolean {
     const {row, col} = coords;
     if (row < 0 || col < 0) return true;
-    if (row >= boardDimensions.rows || col >= boardDimensions.cols) return true;
-    return false;
+    return row >= boardDimensions.rows || col >= boardDimensions.cols;
 }
 
 export function getOppositeDirection(direction: Direction): Direction {

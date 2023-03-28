@@ -13,6 +13,9 @@ export class GameState {
     private _nextBlocks: BlockType[];
 
     private _score = 0;
+
+    private _lines_cleared = 0;
+    private _level = 1;
     private _gameOver = false;
 
     constructor(dim: BoardDimensions) {
@@ -32,6 +35,14 @@ export class GameState {
 
     get score() {
         return this._score;
+    }
+
+    get level() {
+        return this._level;
+    }
+
+    get speed() {
+        return (0.75-(this._level+2)*0.0001)**((this._level+2)/3)*1000;
     }
 
     get gameOver() {
@@ -91,10 +102,10 @@ export class GameState {
             this._currentBlock.moveLeft();
     }
 
-    checkFieldsCollision(direction: Direction | null, nextShape = false): boolean {
+    checkFieldsCollision(direction: Direction | null, shapeType:  "default" | "prev" | "next" = "default"): boolean {
         const y_delta = (direction && direction === Direction.DOWN) ? 1 : 0;
         const x_delta = (direction && direction === Direction.RIGHT) ? 1 : direction === Direction.LEFT ? -1 : 0;
-        const shape = nextShape ? this._currentBlock.nextShape() : this._currentBlock.shape;
+        const shape = shapeType === "next" ? this._currentBlock.nextShape() : shapeType === "prev" ? this._currentBlock.prevShape() : this._currentBlock.shape;
         // @ts-ignore
         for (let y = 0; y < shape.length; y++) {
             // @ts-ignore
@@ -128,6 +139,21 @@ export class GameState {
             this.handleTransitions();
     }
 
+    soft_drop() {
+        this.moveDown()
+        this._score += this._level
+    }
+
+    hard_drop() {
+        if (!this._currentBlock)
+            return
+        while (this.checkDown()) {
+            this._currentBlock.moveDown();
+            this._score += 2 * this._level;
+        }
+        this.handleTransitions();
+    }
+
     handleTransitions() {
         this._currentBlock.shape.forEach((row, y) => {
             row.forEach((cell, x) => {
@@ -138,7 +164,12 @@ export class GameState {
             });
         });
         const fullRows = this.handleFullRows();
-        this._score += fullRows * 100;
+        switch (fullRows) {
+            case 1: this._score += 100 * this._level; break;
+            case 2: this._score += 300 * this._level; break;
+            case 3: this._score += 500 * this._level; break;
+            case 4: this._score += 800 * this._level; break;
+        }
         this.addBlock();
     }
 
@@ -151,6 +182,8 @@ export class GameState {
                 this._fields.unshift(Array.from({ length: this._dimensions.cols }, () => ""));
             }
         });
+        this._lines_cleared += fullRows;
+        this._level = Math.min(Math.floor(this._lines_cleared / 10) + 1, 29);
         return fullRows;
     }
 
@@ -163,10 +196,25 @@ export class GameState {
         const overShootRight = this._currentBlock.x + this._currentBlock.nextShape()[0].length > this._dimensions.cols;
         // @ts-ignore
         const overShootLeft = this._currentBlock.x + this.findZeroCols(this._currentBlock.nextShape()) < 0;
-        const collisionOnRotate = this.checkFieldsCollision(null, true);
+        const collisionOnRotate = this.checkFieldsCollision(null, "next");
 
         if(!(overShootBottom || overShootRight || overShootLeft || collisionOnRotate))
             this._currentBlock.rotate();
+    }
+
+    rotateBack() {
+        if (!this._currentBlock) return;
+
+        // @ts-ignore
+        const overShootBottom = this._currentBlock.y + this._currentBlock.prevShape().length > this._dimensions.rows;
+        // @ts-ignore
+        const overShootRight = this._currentBlock.x + this._currentBlock.prevShape()[0].length > this._dimensions.cols;
+        // @ts-ignore
+        const overShootLeft = this._currentBlock.x + this.findZeroCols(this._currentBlock.prevShape()) < 0;
+        const collisionOnRotate = this.checkFieldsCollision(null, "prev");
+
+        if(!(overShootBottom || overShootRight || overShootLeft || collisionOnRotate))
+            this._currentBlock.rotateBack();
     }
 
     findZeroCols(shape: number[][]): number {

@@ -67,6 +67,12 @@ export abstract class Block {
         return this._shapes[(this._shapes.indexOf(this._shape) + 1) % this._shapes.length];
     }
 
+    prevShape() {
+        // @ts-ignore
+        const index = this._shapes.indexOf(this._shape);
+        return this._shapes[index === 0 ? this._shapes.length - 1 : index - 1];
+    }
+
     rotate() {
         // @ts-ignore
         this._shape = this.nextShape();
@@ -74,7 +80,7 @@ export abstract class Block {
 
     rotateBack() {
         // @ts-ignore
-        this._shape = this._shapes[(this._shapes.indexOf(this._shape) - 1) % this._shapes.length];
+        this._shape = this.prevShape();
     }
 }
 

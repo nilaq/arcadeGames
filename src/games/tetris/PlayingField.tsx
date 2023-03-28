@@ -19,6 +19,7 @@ const PlayingField = ({width, height}: Props) => {
         setGameStatus,
         score,
         setScore,
+        setLevel,
         highScore,
         setHighScore,
         setNextBlocks
@@ -36,8 +37,9 @@ const PlayingField = ({width, height}: Props) => {
     useInterval(() => {
         setFields(gameState.fields);
         setScore(gameState.score);
+        setLevel(gameState.level);
         if (gameState.score > highScore) setHighScore(gameState.score);
-    }, 50)
+    }, 1000/60)
 
     // automatically move down
     useInterval(() => {
@@ -46,7 +48,7 @@ const PlayingField = ({width, height}: Props) => {
         } else {
             setNextBlocks(gameState.nextBlockTypes);
             gameState.moveDown();
-            setSpeed(Math.max(600 - gameState.score * 0.5, 200));
+            setSpeed(gameState.speed);
         }
     }, gameStatus === GameStatus.RUNNING ? speed : null)
 
@@ -68,7 +70,11 @@ const PlayingField = ({width, height}: Props) => {
             case 'ArrowLeft':  gameState.moveLeft(); break;
             case 'ArrowRight': gameState.moveRight(); break;
             case 'ArrowUp':    gameState.rotate(); break;
-            case 'ArrowDown':  gameState.moveDown(); break;
+            case 'ArrowDown':  gameState.soft_drop(); break;
+            case 'Enter':      gameState.rotate(); break;
+            case ' ':          gameState.hard_drop(); break;
+            case 'Escape':     setGameStatus(GameStatus.PAUSED); break;
+            case 'z':         gameState.rotateBack(); break;
         }
     }
 

@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {BlockFactory, BlockType} from "../games/tetris/Blocks";
+import {BlockType} from "../games/tetris/Blocks";
 import {GameStatus} from "../games/lib/gameUtils";
 
 export interface TetrisState {
@@ -10,6 +10,8 @@ export interface TetrisState {
     // The snake's current score
     score: number;
     setScore: (score: number) => void;
+    level: number;
+    setLevel: (level: number) => void;
 
     highScore: number;
     setHighScore: (highScore: number) => void;
@@ -20,11 +22,13 @@ export interface TetrisState {
 }
 
 export const useTetrisStore = create<TetrisState>()((set) => ({
-    squareSize: 25,
-    gameStatus: GameStatus.READY,
+    squareSize: 30,
+    gameStatus: GameStatus.LOADED,
     setGameStatus: (gameStatus: GameStatus) => set({gameStatus: gameStatus}),
     score: 0,
     setScore: (score: number) => set({score: score}),
+    level: 1,
+    setLevel: (level: number) => set({level: level}),
     highScore: 0,
     setHighScore: (highScore: number) => set({highScore: highScore}),
     nextBlocks: [],
