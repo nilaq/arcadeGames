@@ -1,17 +1,15 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { Jost } from "next/font/google";
+import { Inter, Chakra_Petch } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react"
 
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
 
-const jost = Jost({
-  subsets: ["latin"],
-  variable: '--font-jost',
-});
+const inter = Inter({subsets: ["latin"]});
+export const chakraPetch = Chakra_Petch({weight: "700", subsets:["latin"] });
 
 
 const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { session, ...pageProps },
@@ -19,7 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { ses
     return (
         <>
             <SessionProvider session={session}>
-                <main className={`${jost.variable} font-sans`}>
+                <main className={`${inter.className}`}>
                     <Component {...pageProps} />
                 </main>
             </SessionProvider>

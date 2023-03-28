@@ -21,7 +21,6 @@ const PlayingField = ({width, height}: Props) => {
         setScore,
         highScore,
         setHighScore,
-        nextBlocks,
         setNextBlocks
     } = useTetrisStore((state) => state);
 
@@ -49,7 +48,7 @@ const PlayingField = ({width, height}: Props) => {
             gameState.moveDown();
             setSpeed(Math.max(600 - gameState.score * 0.5, 200));
         }
-    }, gameStatus !== GameStatus.PAUSED ? speed : null)
+    }, gameStatus === GameStatus.RUNNING ? speed : null)
 
     const handleGameStart = () => {
         gameState.reset();
@@ -81,7 +80,7 @@ const PlayingField = ({width, height}: Props) => {
     }, [gameStatus])
 
     return (
-        <div id="field" className="bg-gradient-to-b from-tetris-purple to-tetris-dark-blue flex flex-wrap"
+        <div id="field" className="outline outline-1 outline-dwhite"
              style={{width: width, height: height}}>
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row">
@@ -97,12 +96,6 @@ const PlayingField = ({width, height}: Props) => {
             ))}
             {gameStatus !== GameStatus.RUNNING &&
                 <div className="flex flex-col justify-center items-center w-full h-full">
-                    {gameStatus === GameStatus.READY &&
-                        <>
-                            <div className="text-4xl font-bold text-white">Beat your highscore!</div>
-                            <Button onClick={handleGameStart} className="mt-4">Start</Button>
-                        </>
-                    }
                     {gameStatus === GameStatus.GAME_OVER &&
                         <>
                             <div className="text-4xl font-bold text-gray-700">Game Over!</div>

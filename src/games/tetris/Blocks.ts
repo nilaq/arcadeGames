@@ -1,4 +1,3 @@
-import {BoardDimensions} from "../lib/gameUtils";
 
 export enum BlockType {
     I = 'I',
@@ -19,13 +18,16 @@ export abstract class Block {
 
     protected _shape: number[][];
 
-    protected constructor(x: number, y: number, color: string, shapes: number[][][]) {
+    protected _preview: number[][];
+
+    protected constructor(x: number, y: number, color: string, shapes: number[][][], preview: number[][]) {
         this._x = x;
         this._y = y;
         this._color = color;
         this._shapes = shapes;
         // @ts-ignore
         this._shape = this._shapes[0];
+        this._preview = preview;
     }
 
     get x() {
@@ -42,6 +44,10 @@ export abstract class Block {
 
     get shape() {
         return this._shape;
+    }
+
+    get preview() {
+        return this._preview;
     }
 
     moveLeft() {
@@ -74,14 +80,15 @@ export abstract class Block {
 
 export class LBlock extends Block {
     constructor(x: number, y: number) {
+        const preview = [[0,1],[0,1],[1,1]];
         const shapes = [
-            [[1, 0, 0], [1, 1, 1]],
             [[0, 1, 1], [0, 1, 0], [0, 1, 0]],
             [[0, 0, 0], [1, 1, 1], [0, 0, 1]],
             [[0, 1], [0, 1], [1, 1]],
+            [[1, 0, 0], [1, 1, 1]],
 
         ];
-        super(x, y, 'bg-w-blue', shapes);
+        super(x, y, 'bg-w-blue', shapes, preview);
     }
 
 }
@@ -89,70 +96,75 @@ export class LBlock extends Block {
 export class JBlock extends Block {
 
     constructor(x: number, y: number) {
+        const preview = [[1,1],[0,1],[0,1]];
         const shapes = [
-            [[0, 0, 1], [1, 1, 1]],
             [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
+            [[0, 0, 1], [1, 1, 1]],
             [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
             [[1, 1], [0, 1], [0, 1]],
         ];
-        super(x, y, 'bg-w-orange', shapes);
+        super(x, y, 'bg-w-orange', shapes, preview);
     }
 }
 
 export class OBlock extends Block {
     constructor(x: number, y: number) {
         const shapes = [
-            [[1, 1], [1, 1]]
+            [[1, 1], [1, 1]],
         ];
-        super(x, y, 'bg-w-yellow', shapes);
+        super(x, y, 'bg-w-yellow', shapes, shapes[0] as number[][]);
     }
 }
 
 export class TBlock extends Block {
     constructor(x: number, y: number) {
+        const preview = [[0,1],[1,1],[0,1]];
         const shapes = [
             [[0, 1, 0], [1, 1, 1]],
             [[0, 1, 0], [0, 1, 1], [0, 1, 0]],
             [[0, 0, 0], [1, 1, 1], [0, 1, 0]],
             [[0, 1], [1, 1], [0, 1]]
         ];
-        super(x, y, 'bg-w-purple', shapes);
+        super(x, y, 'bg-w-purple', shapes, preview);
     }
 }
 
 export class SBlock extends Block {
     constructor(x: number, y: number) {
+        const preview = [[0,1],[1,1], [1,0]];
         const shapes = [
             [[0, 1, 1], [1, 1, 0]],
             [[0, 1, 0], [0, 1, 1], [0, 0, 1]],
             [[0, 0, 0],[0, 1, 1], [1, 1, 0]],
             [[1, 0], [1, 1], [0, 1]],
         ];
-        super(x, y, 'bg-w-green', shapes);
+        super(x, y, 'bg-w-green', shapes, preview);
     }
 }
 
 export class ZBlock extends Block {
     constructor(x: number, y: number) {
+        const preview = [[1,0],[1,1], [0,1]];
         const shapes = [
             [[1, 1, 0], [0, 1, 1]],
             [[0, 0, 1], [0, 1, 1], [0, 1, 0]],
             [[0, 0, 0],[1, 1, 0], [0, 1, 1]],
             [[0, 1], [1, 1], [1, 0]],
         ];
-        super(x, y, 'bg-w-red', shapes);
+        super(x, y, 'bg-w-red', shapes, preview);
     }
 }
 
 export class IBlock extends Block {
     constructor(x: number, y: number) {
+        const preview = [[1],[1],[1],[1]];
         const shapes = [
             [[0,1], [0,1], [0,1], [0,1]],
             [[0,0,0,0],[1, 1, 1, 1]],
             [[0,0,1], [0,0,1], [0,0,1], [0,0,1]],
             [[0,0,0,0],[0,0,0,0], [1,1,1,1]],
         ];
-        super(x, y, 'bg-w-aqua', shapes);
+        super(x, y, 'bg-w-aqua', shapes, preview);
     }
 }
 

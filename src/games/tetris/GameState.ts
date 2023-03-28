@@ -9,6 +9,7 @@ export class GameState {
     private _currentBlock: Block;
     private readonly mid: number;
 
+    // @ts-ignore
     private _nextBlocks: BlockType[];
 
     private _score = 0;
@@ -18,7 +19,7 @@ export class GameState {
         this._dimensions = dim;
         this._fields = Array.from({ length: dim.rows }, () => Array.from({ length: dim.cols }, () => ""));
         this.mid = Math.floor(dim.cols / 2);
-        this._nextBlocks = [];
+        this.reset();
     }
 
     reset() {
@@ -114,9 +115,7 @@ export class GameState {
         // @ts-ignore
         if (this._currentBlock.y + this._currentBlock.shape.length >= this._dimensions.rows)
             return false;
-        if (this.checkFieldsCollision(Direction.DOWN))
-            return false;
-        return true;
+        return !this.checkFieldsCollision(Direction.DOWN);
     }
 
     moveDown() {
