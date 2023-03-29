@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>RetroGames.io</title>
+        <title>Tetris.so</title>
         <meta name="description" content="Feel the nostalgia" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

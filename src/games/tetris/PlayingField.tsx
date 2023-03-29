@@ -26,8 +26,8 @@ const PlayingField = ({width, height}: Props) => {
     } = useTetrisStore((state) => state);
 
     const boardDimensions = {
-        rows: Math.floor(height / squareSize),
-        cols: Math.floor(width / squareSize)
+        rows: height,
+        cols: width
     }
     const [fields, setFields] = useState<string[][]>(createEmptyBoard(boardDimensions));
     const [gameState, setGameState] = useState(new GameState(boardDimensions));
@@ -39,7 +39,7 @@ const PlayingField = ({width, height}: Props) => {
         setScore(gameState.score);
         setLevel(gameState.level);
         if (gameState.score > highScore) setHighScore(gameState.score);
-    }, 1000/60)
+    }, gameStatus === GameStatus.RUNNING ? 1000/60 : null)
 
     // automatically move down
     useInterval(() => {
@@ -86,12 +86,12 @@ const PlayingField = ({width, height}: Props) => {
     }, [gameStatus])
 
     return (
-        <div id="field" className="outline outline-1 outline-dwhite"
-             style={{width: width, height: height}}>
+        <div id="field" className="outline outline-1 outline-dwhite flex flex-col gap-[1px]"
+             style={{width: width * (squareSize + 1) - 1, height: height * (squareSize + 1) - 1}}>
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
-                <div key={rowIdx} className="row flex flex-row">
+                <div key={rowIdx} className="row flex flex-row gap-[1px]">
                     {row.map((cellValue, cellIdx) => {
-                        return <div key={cellIdx} className={`${cellValue}`} style={
+                        return <div key={cellIdx} className={`${cellValue} rounded-[1px]`} style={
                             {
                                 width: squareSize,
                                 height: squareSize
