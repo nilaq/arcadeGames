@@ -2,7 +2,6 @@ import { type NextPage } from "next";
 import Head from "next/head";
 
 import { Container } from "../components/cards/Card";
-import Snake from "../games/snake/Snake";
 import React from "react";
 import Tetris from "../games/tetris/Tetris";
 

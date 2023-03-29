@@ -54,11 +54,25 @@ export class GameState {
         const fields = JSON.parse(JSON.stringify(this._fields));
         const block = this._currentBlock;
         if (block !== undefined) {
+            // add current block to fields
             block.shape.forEach((row, y) => {
                 row.forEach((cell, x) => {
                     if (cell === 1) {
                         // @ts-ignore
                         fields[block.y + y][block.x + x] = block.color;
+                    }
+                });
+            });
+            // add ghost tile to fields
+            let ghostDelta = 0;
+            while (this.checkDown(ghostDelta)) {
+                ghostDelta++;
+            }
+            block.shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell === 1) {
+                        // @ts-ignore
+                        fields[block.y + y + ghostDelta][block.x + x] = "bg-white/[.25]";
                     }
                 });
             });
@@ -102,8 +116,9 @@ export class GameState {
             this._currentBlock.moveLeft();
     }
 
-    checkFieldsCollision(direction: Direction | null, shapeType:  "default" | "prev" | "next" = "default"): boolean {
-        const y_delta = (direction && direction === Direction.DOWN) ? 1 : 0;
+    checkFieldsCollision(direction: Direction | null, shapeType:  "default" | "prev" | "next" = "default", ghostDelta = 0): boolean {
+        const y_delta = (direction && direction === Direction.DOWN) ? 1 + ghostDelta: 0;
+        console.log(y_delta)
         const x_delta = (direction && direction === Direction.RIGHT) ? 1 : direction === Direction.LEFT ? -1 : 0;
         const shape = shapeType === "next" ? this._currentBlock.nextShape() : shapeType === "prev" ? this._currentBlock.prevShape() : this._currentBlock.shape;
         // @ts-ignore
@@ -122,11 +137,11 @@ export class GameState {
         return false;
     }
 
-    checkDown(): boolean {
+    checkDown(ghostDelta = 0): boolean {
         // @ts-ignore
-        if (this._currentBlock.y + this._currentBlock.shape.length >= this._dimensions.rows)
+        if (this._currentBlock.y + this._currentBlock.shape.length + ghostDelta >= this._dimensions.rows)
             return false;
-        return !this.checkFieldsCollision(Direction.DOWN);
+        return !this.checkFieldsCollision(Direction.DOWN, 'default', ghostDelta);
     }
 
     moveDown() {

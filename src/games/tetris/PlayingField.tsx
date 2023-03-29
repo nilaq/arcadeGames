@@ -39,7 +39,7 @@ const PlayingField = ({width, height}: Props) => {
         setScore(gameState.score);
         setLevel(gameState.level);
         if (gameState.score > highScore) setHighScore(gameState.score);
-    }, gameStatus === GameStatus.RUNNING ? 1000/60 : null)
+    }, 1000/60)
 
     // automatically move down
     useInterval(() => {
@@ -72,8 +72,7 @@ const PlayingField = ({width, height}: Props) => {
             case 'ArrowUp':    gameState.rotate(); break;
             case 'ArrowDown':  gameState.soft_drop(); break;
             case 'Enter':      gameState.rotate(); break;
-            case ' ':          gameState.hard_drop(); break;
-            case 'Escape':     setGameStatus(GameStatus.PAUSED); break;
+            case ' ':          e.preventDefault(); gameState.hard_drop(); break;
             case 'z':         gameState.rotateBack(); break;
         }
     }

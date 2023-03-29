@@ -105,9 +105,9 @@ export class JBlock extends Block {
         const preview = [[1,1],[0,1],[0,1]];
         const shapes = [
             [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
-            [[0, 0, 1], [1, 1, 1]],
             [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
             [[1, 1], [0, 1], [0, 1]],
+            [[0, 0, 1], [1, 1, 1]],
         ];
         super(x, y, 'bg-w-orange', shapes, preview);
     }
