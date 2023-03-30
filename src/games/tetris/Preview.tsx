@@ -11,7 +11,7 @@ const Preview = () => {
 
     return (
         <div className="flex flex-col gap-[15px] items-center justify-center">
-            <Title className="text-w-silver text-xl tracking-wider">Next</Title>
+            <Title className="text-slate-300 text-xl tracking-wider">Next</Title>
             <div className="h-[90px] flex flex-col justify-between items-start">
                 {nextBlocks && nextBlocks.map((type, index) => {
                     return (

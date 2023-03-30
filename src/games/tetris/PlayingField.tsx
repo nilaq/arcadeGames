@@ -4,6 +4,7 @@ import Button from "../../components/buttons/Button";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import {GameState} from "./GameState";
 import {GameStatus, useInterval} from "../lib/gameUtils";
+import GameOverScreen from "./GameOverScreen";
 
 interface Props {
     width: number;
@@ -39,12 +40,14 @@ const PlayingField = ({width, height}: Props) => {
         setScore(gameState.score);
         setLevel(gameState.level);
         if (gameState.score > highScore) setHighScore(gameState.score);
-    }, 1000/60)
+    }, gameStatus === GameStatus.RUNNING ? 1000/60 : null)
 
     // automatically move down
     useInterval(() => {
         if (gameState.gameOver) {
             handleGameOver()
+            setFields(gameState.fields);
+            setSpeed(gameState.speed)
         } else {
             setNextBlocks(gameState.nextBlockTypes);
             gameState.moveDown();
@@ -52,28 +55,24 @@ const PlayingField = ({width, height}: Props) => {
         }
     }, gameStatus === GameStatus.RUNNING ? speed : null)
 
-    const handleGameStart = () => {
-        gameState.reset();
-        setNextBlocks(gameState.nextBlockTypes);
-        setSpeed(600);
-        setGameStatus(GameStatus.RUNNING);
-    }
-
     const handleGameOver = () => {
         setGameState(new GameState(boardDimensions));
         setGameStatus(GameStatus.GAME_OVER);
-        setSpeed(null)
+        gameState.reset();
+        setNextBlocks(gameState.nextBlockTypes);
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === ' ') e.preventDefault();
+        if (gameStatus !== GameStatus.RUNNING) return;
         switch (e.key) {
             case 'ArrowLeft':  gameState.moveLeft(); break;
             case 'ArrowRight': gameState.moveRight(); break;
             case 'ArrowUp':    gameState.rotate(); break;
             case 'ArrowDown':  gameState.soft_drop(); break;
             case 'Enter':      gameState.rotate(); break;
-            case ' ':          e.preventDefault(); gameState.hard_drop(); break;
-            case 'z':         gameState.rotateBack(); break;
+            case ' ':          gameState.hard_drop(); break;
+            case 'z':          gameState.rotateBack(); break;
         }
     }
 
@@ -102,11 +101,7 @@ const PlayingField = ({width, height}: Props) => {
             {gameStatus !== GameStatus.RUNNING &&
                 <div className="flex flex-col justify-center items-center w-full h-full">
                     {gameStatus === GameStatus.GAME_OVER &&
-                        <>
-                            <div className="text-4xl font-bold text-gray-700">Game Over!</div>
-                            <div className="text-2xl font-bold text-gray-700">Score: {score}</div>
-                            <Button onClick={handleGameStart} className="mt-4">Play again</Button>
-                        </>
+                        <GameOverScreen></GameOverScreen>
                     }
                 </div>
             }

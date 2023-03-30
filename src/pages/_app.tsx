@@ -10,6 +10,7 @@ import "../styles/globals.css";
 
 const inter = Inter({subsets: ["latin"]});
 export const chakraPetch = Chakra_Petch({weight: "700", subsets:["latin"] });
+export const chakraPetchLight = Chakra_Petch({weight: "300", subsets:["latin"] });
 
 
 const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { session, ...pageProps },
@@ -17,7 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { ses
     return (
         <>
             <SessionProvider session={session}>
-                <main className={`${inter.className}`}>
+                <main className={`${chakraPetch.className}`}>
                     <Component {...pageProps} />
                 </main>
             </SessionProvider>

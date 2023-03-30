@@ -45,18 +45,17 @@ const Tetris = () => {
                 <StartScreen></StartScreen>
             }
             {gameStatus !== GameStatus.LOADED &&
-                <div className="w-full h-full flex flex-col justify-center items-center bg-black">
+                <div className="w-full h-full flex flex-col justify-center items-center bg-slate-900">
                     <div className="flex flex-col justify-center items-center">
-                        <Title className={`text-6xl pb-10 ${chakraPetch.className} text-transparent bg-gradient-to-r 
-                                        from-[#9C9E9F] via-[#FDFFFF] to-[#A7A9AB] bg-clip-text `}>Tetris</Title>
+                        <Title className={`text-6xl pb-10 ${chakraPetch.className} text-slate-300 `}>Tetris</Title>
                         <div className="flex flex-row justify-center gap-0 items-start">
 
-                            <div className="mr-7 h-full w-32 flex flex-col items-end justify-between">
+                            <div className="mr-9 h-full w-32 flex flex-col items-end justify-between">
                                 <IndicatorText title="Level" element={level.toString()} elementSize="4xl" top={true}/>
                                 <IndicatorText title="Score" element={score.toString()} elementSize="4xl" top={false}/>
                             </div>
                             <PlayingField width={10} height={20}/>
-                            <div className="ml-7 h-full w-32 flex flex-col justify-between items-start">
+                            <div className="ml-9 h-full w-32 flex flex-col justify-between items-start">
                                 <Preview></Preview>
                                 <IndicatorText title="Highscore" element={highScore.toString()} elementSize="4xl" top={false}/>
                             </div>

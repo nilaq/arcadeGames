@@ -3,6 +3,7 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
 import { cn } from "../../utils/helpers";
+import {chakraPetchLight} from "../../pages/_app";
 
 const Tabs = TabsPrimitive.Root;
 
@@ -13,7 +14,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "scrollbar-hide inline-flex max-w-full overflow-auto rounded-md bg-zinc-100 p-1",
+      "scrollbar-hide inline-flex max-w-full overflow-auto rounded-[6px] bg-slate-800 p-[3px]",
       className
     )}
     {...props}
@@ -27,7 +28,10 @@ const TabsTrigger = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     className={cn(
-      "inline-flex min-w-[100px] flex-shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-zinc-700 transition-all  disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-zinc-900 data-[state=active]:shadow-sm",
+      "inline-flex min-w-[40px] flex-shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-[3px] " +
+        "px-1 py-[1px] text-xs font-medium text-slate-100 transition-all  disabled:pointer-events-none disabled:opacity-50 " +
+        "data-[state=active]:bg-slate-500 data-[state=active]:text-slate-100 data-[state=active]:shadow-sm",
+      chakraPetchLight.className,
       className
     )}
     {...props}

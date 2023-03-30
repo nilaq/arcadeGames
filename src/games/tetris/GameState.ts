@@ -54,15 +54,6 @@ export class GameState {
         const fields = JSON.parse(JSON.stringify(this._fields));
         const block = this._currentBlock;
         if (block !== undefined) {
-            // add current block to fields
-            block.shape.forEach((row, y) => {
-                row.forEach((cell, x) => {
-                    if (cell === 1) {
-                        // @ts-ignore
-                        fields[block.y + y][block.x + x] = block.color;
-                    }
-                });
-            });
             // add ghost tile to fields
             let ghostDelta = 0;
             while (this.checkDown(ghostDelta)) {
@@ -73,6 +64,15 @@ export class GameState {
                     if (cell === 1) {
                         // @ts-ignore
                         fields[block.y + y + ghostDelta][block.x + x] = "bg-white/[.25]";
+                    }
+                });
+            });
+            // add current block to fields
+            block.shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell === 1) {
+                        // @ts-ignore
+                        fields[block.y + y][block.x + x] = block.color;
                     }
                 });
             });
@@ -90,7 +90,7 @@ export class GameState {
             return;
         }
         // @ts-ignore
-        this._currentBlock = BlockFactory.createBlock(this.mid, 0, this._nextBlocks[0] ? this._nextBlocks.shift() : BlockFactory.getRandomBlockType());
+        this._currentBlock = BlockFactory.createBlock(this.mid -  1, 0, this._nextBlocks[0] ? this._nextBlocks.shift() : BlockFactory.getRandomBlockType());
         this._nextBlocks.push(BlockFactory.getRandomBlockType());
     }
 
