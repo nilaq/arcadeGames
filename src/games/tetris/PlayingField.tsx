@@ -18,12 +18,12 @@ const PlayingField = ({width, height}: Props) => {
         squareSize,
         gameStatus,
         setGameStatus,
-        score,
         setScore,
         setLevel,
         highScore,
         setHighScore,
-        setNextBlocks
+        setNextBlocks,
+        setHoldBlock,
     } = useTetrisStore((state) => state);
 
     const boardDimensions = {
@@ -50,6 +50,7 @@ const PlayingField = ({width, height}: Props) => {
             setSpeed(gameState.speed)
         } else {
             setNextBlocks(gameState.nextBlockTypes);
+            setHoldBlock(gameState.holdBlockType);
             gameState.moveDown();
             setSpeed(gameState.speed);
         }
@@ -60,6 +61,7 @@ const PlayingField = ({width, height}: Props) => {
         setGameStatus(GameStatus.GAME_OVER);
         gameState.reset();
         setNextBlocks(gameState.nextBlockTypes);
+        setHoldBlock(gameState.holdBlockType);
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -73,6 +75,8 @@ const PlayingField = ({width, height}: Props) => {
             case 'Enter':      gameState.rotate(); break;
             case ' ':          gameState.hard_drop(); break;
             case 'z':          gameState.rotateBack(); break;
+            case 'h':          gameState.hold(); break;
+            case 'c':          gameState.hold(); break;
         }
     }
 
@@ -84,17 +88,13 @@ const PlayingField = ({width, height}: Props) => {
     }, [gameStatus])
 
     return (
-        <div id="field" className="outline outline-1 outline-dwhite flex flex-col gap-[1px]"
-             style={{width: width * (squareSize + 1) - 1, height: height * (squareSize + 1) - 1}}>
+        <div id="field" className={`outline outline-1 outline-dwhite flex flex-col gap-[1px]
+        w-[${width * (20 + 1) - 1}px md:w-[${width * (squareSize + 1) - 1}px] h-[${height * (20 + 1) - 1}px] md:h-[${height * (squareSize + 1) - 1}px]`}>
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row gap-[1px]">
                     {row.map((cellValue, cellIdx) => {
-                        return <div key={cellIdx} className={`${cellValue} rounded-[1px]`} style={
-                            {
-                                width: squareSize,
-                                height: squareSize
-                            }
-                        }></div>;
+                        return <div key={cellIdx} className={`${cellValue} rounded-[1px] w-[20px] md:w-[${squareSize}px]
+                         h-[20px] md:h-[${squareSize}px]`}></div>;
                     })}
                 </div>
             ))}

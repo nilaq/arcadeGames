@@ -19,10 +19,12 @@ export interface TetrisState {
     nextBlocks: BlockType[];
 
     setNextBlocks: (nextBlock: BlockType[]) => void;
+    holdBlock: BlockType | null;
+    setHoldBlock: (holdBlock: BlockType | null) => void;
 }
 
 export const useTetrisStore = create<TetrisState>()((set) => ({
-    squareSize: 30,
+    squareSize: 26,
     gameStatus: GameStatus.LOADED,
     setGameStatus: (gameStatus: GameStatus) => set({gameStatus: gameStatus}),
     score: 0,
@@ -32,5 +34,7 @@ export const useTetrisStore = create<TetrisState>()((set) => ({
     highScore: 0,
     setHighScore: (highScore: number) => set({highScore: highScore}),
     nextBlocks: [],
-    setNextBlocks: (nextBlocks: BlockType[]) => set({nextBlocks: nextBlocks})
+    setNextBlocks: (nextBlocks: BlockType[]) => set({nextBlocks: nextBlocks}),
+    holdBlock: null,
+    setHoldBlock: (holdBlock: BlockType | null) => set({holdBlock: holdBlock})
 }));

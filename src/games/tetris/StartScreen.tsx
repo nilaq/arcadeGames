@@ -1,17 +1,23 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Title from "../../components/typography/Title";
 import {chakraPetch} from "../../pages/_app";
 import {GameStatus} from "../lib/gameUtils";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import Button from '../../components/buttons/Button';
 import {api} from "../../utils/api";
+import {User} from ".prisma/client";
+import trpc from "../../pages/api/trpc/[trpc]";
 
 
-interface UserInput {
-    ipAddress?: string;
-    name?: string;
-    firstSeen?: Date;
-    lastSeen?: Date;
+// fetch IP address
+async function fetchIpAddress(): Promise<string | undefined> {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Error fetching IP address:', error);
+    }
 }
 
 const StartScreen = () => {
@@ -29,25 +35,15 @@ const StartScreen = () => {
         },
     });
 
-    const isMounted = useRef(false);
 
-    useEffect(() => {
-        const fetchIpAddress = async () => {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                const ipAddress = data.ip;
-                mutate({ipAddress: ipAddress});
-            } catch (error) {
-                console.error('Error fetching IP address:', error);
-            }
-        };
+    /*
+    const ipAddress = await fetchIpAddress();
+    if (!ipAddress) return
+    const user = api.user.getByIpAddress.useQuery(ipAddress).data;
+    console.log(user);
+     */
 
-        if (!isMounted.current) {
-            isMounted.current = true;
-            fetchIpAddress();
-        }
-    }, []);
+
 
     return (
         <div className="w-full h-full flex flex-col justify-center items-center bg-slate-900">

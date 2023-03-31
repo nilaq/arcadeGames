@@ -12,6 +12,9 @@ export class GameState {
     // @ts-ignore
     private _nextBlocks: BlockType[];
 
+    private _holdBlock: BlockType | null = null;
+    private _holdUsed = false;
+
     private _score = 0;
 
     private _lines_cleared = 0;
@@ -21,7 +24,7 @@ export class GameState {
     constructor(dim: BoardDimensions) {
         this._dimensions = dim;
         this._fields = Array.from({ length: dim.rows }, () => Array.from({ length: dim.cols }, () => ""));
-        this.mid = Math.floor(dim.cols / 2);
+        this.mid = Math.floor(dim.cols / 2) - 1;
         this.reset();
     }
 
@@ -30,6 +33,7 @@ export class GameState {
         this._score = 0;
         this._gameOver = false;
         this._nextBlocks = [BlockFactory.getRandomBlockType(), BlockFactory.getRandomBlockType(), BlockFactory.getRandomBlockType()];
+        this._holdBlock = null
         this.addBlock()
     }
 
@@ -84,13 +88,17 @@ export class GameState {
         return this._nextBlocks;
     }
 
+    get holdBlockType() {
+        return this._holdBlock;
+    }
+
     addBlock() {
         if (this.checkGameOver()) {
             this._gameOver = true;
             return;
         }
         // @ts-ignore
-        this._currentBlock = BlockFactory.createBlock(this.mid -  1, 0, this._nextBlocks[0] ? this._nextBlocks.shift() : BlockFactory.getRandomBlockType());
+        this._currentBlock = BlockFactory.createBlock(this.mid, 0, this._nextBlocks[0] ? this._nextBlocks.shift() : BlockFactory.getRandomBlockType());
         this._nextBlocks.push(BlockFactory.getRandomBlockType());
     }
 
@@ -185,6 +193,7 @@ export class GameState {
             case 3: this._score += 500 * this._level; break;
             case 4: this._score += 800 * this._level; break;
         }
+        this._holdUsed = false;
         this.addBlock();
     }
 
@@ -230,6 +239,21 @@ export class GameState {
 
         if(!(overShootBottom || overShootRight || overShootLeft || collisionOnRotate))
             this._currentBlock.rotateBack();
+    }
+
+    hold() {
+        if (!this._holdUsed) {
+            this._holdUsed = true;
+            if (!this._currentBlock) return;
+            if (!this._holdBlock) {
+                this._holdBlock = BlockFactory.getBlockType(this._currentBlock);
+                this.addBlock();
+            } else {
+                const temp = this._holdBlock;
+                this._holdBlock = BlockFactory.getBlockType(this._currentBlock);
+                this._currentBlock = BlockFactory.createBlock(this.mid, 0, temp);
+            }
+        }
     }
 
     findZeroCols(shape: number[][]): number {

@@ -8,6 +8,13 @@ export const userRouter = createTRPCRouter({
         .query(({}) => {
             return prisma.user.findMany();
         }),
+    getByIpAddress: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+        return ctx.prisma.user.findFirst({
+            where: {
+                ipAddress: input,
+            },
+        });
+    }),
     create: publicProcedure.input(z.object({
         ipAddress: z.string().optional(),
         name: z.string().optional(),

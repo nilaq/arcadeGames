@@ -5,10 +5,12 @@ import {useTetrisStore} from "../../stores/tetrisStore";
 import Preview from "./Preview";
 import {GameStatus} from "../lib/gameUtils";
 import IndicatorText from "../lib/IndicatorText";
-import {chakraPetch} from "../../pages/_app";
+import {chakraPetch, chakraPetchLight} from "../../pages/_app";
 import Button from "../../components/buttons/Button";
 import StartScreen from "./StartScreen";
 import Cookie from "js-cookie";
+import Hold from "./Hold";
+import Heading from "../../components/typography/Heading";
 
 
 const Tetris = () => {
@@ -46,23 +48,29 @@ const Tetris = () => {
             }
             {gameStatus !== GameStatus.LOADED &&
                 <div className="w-full h-full flex flex-col justify-center items-center bg-slate-900">
-                    <div className="flex flex-col justify-center items-center">
-                        <Title className={`text-6xl pb-10 ${chakraPetch.className} text-slate-300 `}>Tetris</Title>
+                    <div className="flex flex-col justify-center items-center gap-8">
+                        <Title className={`text-6xl ${chakraPetch.className} text-slate-300 `}>Tetris</Title>
                         <div className="flex flex-row justify-center gap-0 items-start">
 
-                            <div className="mr-9 h-full w-32 flex flex-col items-end justify-between">
-                                <IndicatorText title="Level" element={level.toString()} elementSize="4xl" top={true}/>
-                                <IndicatorText title="Score" element={score.toString()} elementSize="4xl" top={false}/>
+                            <div className="mr-4 md:mr-9 h-full w-16 md:w-32 flex flex-col items-end justify-between">
+                                <Hold></Hold>
+                                <IndicatorText title="Level" element={level.toString()} elementSize="4xl" top={false}/>
                             </div>
                             <PlayingField width={10} height={20}/>
-                            <div className="ml-9 h-full w-32 flex flex-col justify-between items-start">
+                            <div className="ml-4 md:ml-9 h-full w-16 md:w-32 flex flex-col justify-between items-start">
                                 <Preview></Preview>
-                                <IndicatorText title="Highscore" element={highScore.toString()} elementSize="4xl" top={false}/>
+                                <IndicatorText title="Score" element={score.toString()} elementSize="4xl" top={false}/>
                             </div>
-
+                            <div className="h-full flex flex-col items-center justify-end">
+                                <div className="absolute">
+                                    {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) &&
+                                    <Button className="relative left-32 bg-slate-600 text-slate-200" onClick={handlePause}>{gameStatus === GameStatus.PAUSED ? 'Resume' : 'Pause'}</Button>}
+                                </div>
+                            </div>
                         </div>
-                        <div className="pt-5 w-full flex flex-row items-center justify-center">
-                            <Button onClick={handlePause}>{gameStatus === GameStatus.PAUSED ? 'Resume' : 'Pause'}</Button>
+                        <div>
+                            <Heading className="text-sm text-slate-200">View Leaderboard</Heading>
+                            <Heading className={`${chakraPetchLight.className} italic text-sm text-slate-200`}>Highscore: {highScore}</Heading>
                         </div>
                     </div>
                 </div>

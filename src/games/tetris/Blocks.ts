@@ -194,6 +194,25 @@ export class BlockFactory {
         }
     }
 
+    static getBlockType(block: Block): BlockType {
+        if (block instanceof IBlock) {
+            return BlockType.I;
+        } else if (block instanceof JBlock) {
+            return BlockType.J;
+        } else if (block instanceof LBlock) {
+            return BlockType.L;
+        } else if (block instanceof OBlock) {
+            return BlockType.O;
+        } else if (block instanceof SBlock) {
+            return BlockType.S;
+        } else if (block instanceof TBlock) {
+            return BlockType.T;
+        } else if (block instanceof ZBlock) {
+            return BlockType.Z;
+        }
+        throw new Error('Unknown block type');
+    }
+
     static createRandomBlock(x: number, y: number): Block {
         return BlockFactory.createBlock(x, y, this.getRandomBlockType());
     }
