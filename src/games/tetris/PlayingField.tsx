@@ -93,8 +93,8 @@ const PlayingField = ({width, height}: Props) => {
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row gap-[1px]">
                     {row.map((cellValue, cellIdx) => {
-                        return <div key={cellIdx} className={`${cellValue} rounded-[1px] w-[20px] md:w-[${squareSize}px]
-                         h-[20px] md:h-[${squareSize}px]`}></div>;
+                        return <div key={cellIdx} className={`${cellValue} rounded-[1px] w-[20px] md:w-[26px]
+                         h-[20px] md:h-[26px]`}></div>;
                     })}
                 </div>
             ))}
