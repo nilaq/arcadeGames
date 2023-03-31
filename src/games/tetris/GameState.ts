@@ -126,7 +126,6 @@ export class GameState {
 
     checkFieldsCollision(direction: Direction | null, shapeType:  "default" | "prev" | "next" = "default", ghostDelta = 0): boolean {
         const y_delta = (direction && direction === Direction.DOWN) ? 1 + ghostDelta: 0;
-        console.log(y_delta)
         const x_delta = (direction && direction === Direction.RIGHT) ? 1 : direction === Direction.LEFT ? -1 : 0;
         const shape = shapeType === "next" ? this._currentBlock.nextShape() : shapeType === "prev" ? this._currentBlock.prevShape() : this._currentBlock.shape;
         // @ts-ignore

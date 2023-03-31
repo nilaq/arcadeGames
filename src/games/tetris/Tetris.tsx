@@ -21,7 +21,7 @@ const Tetris = () => {
 
     // use effect to persist high score
     useEffect(() => {
-        const persistedHighScore = Cookie.get("highScore");
+        const persistedHighScore = localStorage.getItem("highScore");
         if (persistedHighScore) {
             setHighScore(JSON.parse(persistedHighScore));
         }
@@ -29,7 +29,7 @@ const Tetris = () => {
 
     useEffect(() => {
         if (highScore > 0) {
-            Cookie.set("highScore", JSON.stringify(highScore));
+            localStorage.setItem("highScore", JSON.stringify(highScore));
         }
     }, [highScore])
 

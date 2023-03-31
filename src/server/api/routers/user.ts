@@ -8,26 +8,36 @@ export const userRouter = createTRPCRouter({
         .query(({}) => {
             return prisma.user.findMany();
         }),
-    getByIpAddress: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-        return ctx.prisma.user.findFirst({
+    getById: publicProcedure.input(z.string()).query(({ctx, input}) => {
+        return ctx.prisma.user.findUnique({
             where: {
-                ipAddress: input,
+                id: input,
             },
         });
     }),
     create: publicProcedure.input(z.object({
-        ipAddress: z.string().optional(),
         name: z.string().optional(),
         firstSeen: z.date().optional(),
-        lastSeen: z.date().optional(),
     }))
         .mutation(async ({input}) => {
             return prisma.user.create({
                 data: {
-                    ipAddress: input.ipAddress,
                     name: input.name,
                     firstSeen: input.firstSeen,
-                    lastSeen: input.lastSeen,
+                }
+            })
+        }),
+    update: publicProcedure.input(z.object({
+        id: z.string(),
+        name: z.string().optional()
+    }))
+        .mutation(async ({input}) => {
+            return prisma.user.update({
+                where: {
+                    id: input.id,
+                },
+                data: {
+                    name: input.name,
                 }
             })
         })

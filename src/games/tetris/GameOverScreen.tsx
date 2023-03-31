@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from "../../components/buttons/Button";
 import Title from '../../components/typography/Title';
 import {useTetrisStore} from "../../stores/tetrisStore";
@@ -7,24 +7,95 @@ import {chakraPetchLight} from "../../pages/_app";
 import Text from "../../components/typography/Text";
 import Input from "../../components/inputs/Input";
 import {GameStatus} from "../lib/gameUtils";
+import {api} from "../../utils/api";
+
+interface ScoreEntry {
+    name: string;
+    score: number;
+    highlight: boolean;
+}
 
 
 const GameOverScreen = () => {
 
     const {
-        score, setScore, setGameStatus
+        score, setScore, setGameStatus, uid, updatedScore, setUpdatedScore
     } = useTetrisStore((state) => state);
 
-    const [name, setName] = useState<string>('name');
+    const localName = localStorage.getItem("name");
+    const [name, setName] = useState<string>(localName ? localName : "");
+    const [scoreId, setScoreId] = useState<string | null>(null);
+    let localScores: ScoreEntry[] = [];
+    let globalScores: ScoreEntry[] = [];
+
+    // get local scores
+    if (uid !== null) {
+        const { data: locals} = api.score.getTop5Local.useQuery(uid);
+        if (locals !== undefined) {
+            const localMap: ScoreEntry[] = locals.filter((local) => local.score !== score).map((local) => {
+                    return {name: local.name ? local.name : "", score: local.score, highlight: false}
+            })
+            localScores = [...(localMap as ScoreEntry[]), {name: name, score: score, highlight: true}].sort((a, b) => b.score - a.score).slice(0, 5);
+        }
+    }
+
+    // get global scores
+    const { data: globals} = api.score.getTop5Global.useQuery();
+    if (globals !== undefined) {
+        const globalMap = globals.filter((global) => global.score !== score).map((global) => {
+            return {name: global.name ? global.name : "", score: global.score, highlight: false}
+        })
+        globalScores = [...(globalMap as ScoreEntry[]), {name: name, score: score, highlight: true}].sort((a, b) => b.score - a.score).slice(0, 5);
+    }
+
+    // define create score mutation
+    const { mutate: createScore} = api.score.create.useMutation({
+        onSuccess: (score) => {
+            console.log("Score created successfully")
+            setScoreId(score.id);
+        },
+        onError: (error) => {
+            console.log(error.message);
+            setUpdatedScore(false);
+        }
+    });
+
+    // define update score mutation
+    const { mutate: updateScore } = api.score.update.useMutation({
+        onSuccess: (score) => {
+            console.log("Score updated successfully")
+        },
+        onError: (error) => {
+            console.log(error.message);
+        }
+    })
+
+    // send score to db if game over
+    useEffect(() => {
+        if(uid !== null) {
+            if (!updatedScore) {
+                const name = localStorage.getItem("name");
+                setUpdatedScore(true);
+                if (name !== null) {
+                    createScore({score: score, user: uid, name: name});
+                } else {
+                    createScore({score: score, user: uid});
+                }
+            }
+        }
+    }, [])
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+        localStorage.setItem("name", event.target.value);
+        if (scoreId !== null) {
+            updateScore({id: scoreId, name: event.target.value});
+        }
     }
 
-    const scoreLine = (place: string, name: string, score: string, highlight = false) => {
-
+    const scoreLine = (place: string, name: string, score: string, highlight = false, key: number) => {
         const text = <>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-2" >
                     <div className="w-3 text-slate-100 font-bold">{place}.</div>
                     <div className={`text-slate-100 ${chakraPetchLight.className}`}>{name}</div>
                  </div>
@@ -33,12 +104,12 @@ const GameOverScreen = () => {
 
         if (highlight) {
             return (
-                <div className="w-full flex flex-row justify-between bg-slate-600 rounded-[6px] px-2">{text}</div>
+                <div className="w-full flex flex-row justify-between bg-slate-600 rounded-[6px] px-2" key={key}>{text}</div>
             )
         }
         else {
             return (
-                <div className="w-full flex flex-row justify-between px-2">{text}</div>
+                <div className="w-full flex flex-row justify-between px-2" key={key}>{text}</div>
             )
         }
     }
@@ -59,22 +130,18 @@ const GameOverScreen = () => {
                     </div>
                     <div className="w-full px-2 pt-1 pb-2 bg-slate-800 flex flex-col rounded-[6px]">
                         <TabsContent value="local">
-                            {scoreLine("1", "juliushi", "120,057")}
-                            {scoreLine("2", "djraban", "103,123")}
-                            {scoreLine("3", name, "98,085", true)}
-                            {scoreLine("4", "blitzard", "73,110")}
-                            {scoreLine("5", "juliushi", "2,304")}
+                            {localScores.map((local, index) => {
+                                return scoreLine((index + 1).toString(), local.name, local.score.toString(), local.highlight, index)
+                            })}
                         </TabsContent>
                         <TabsContent value="global">
-                            {scoreLine("2", "juliushihi", "120,057")}
-                            {scoreLine("3", "djraban", "103,123")}
-                            {scoreLine("4", name, "98,085", true)}
-                            {scoreLine("4", "blitzard", "73,110")}
-                            {scoreLine("5", "juliushi", "2,304")}
+                            {globalScores.map((global, index) => {
+                                return scoreLine((index + 1).toString(), global.name, global.score.toString(), global.highlight, index)
+                            })}
                         </TabsContent>
                     </div>
                 </Tabs>
-                <Input id="name-input" type="text" placeholder="name" onChange={handleNameChange}/>
+                <Input id="name-input" type="text" defaultValue={name} placeholder="name" onChange={handleNameChange}/>
             </div>
             <div className="w-1/2 flex flex-col items-center gap-2">
                 <Button className="relative h-8 w-40 bg-slate-800">
@@ -83,7 +150,7 @@ const GameOverScreen = () => {
                     </div>
                     Continue
                 </Button>
-                <Button onClick={() => setGameStatus(GameStatus.RUNNING)} className="h-8 w-40 bg-slate-700">Play again</Button>
+                <Button onClick={() => {setScore(0); setGameStatus(GameStatus.RUNNING); setUpdatedScore(false)}} className="h-8 w-40 bg-slate-700">Play again</Button>
             </div>
         </div>
     );

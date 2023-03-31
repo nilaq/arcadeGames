@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {createEmptyBoard} from "./gameUtils";
-import Button from "../../components/buttons/Button";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import {GameState} from "./GameState";
 import {GameStatus, useInterval} from "../lib/gameUtils";
@@ -89,7 +88,7 @@ const PlayingField = ({width, height}: Props) => {
 
     return (
         <div id="field" className={`outline outline-1 outline-dwhite flex flex-col gap-[1px]
-        w-[${width * (20 + 1) - 1}px md:w-[${width * (squareSize + 1) - 1}px] h-[${height * (20 + 1) - 1}px] md:h-[${height * (squareSize + 1) - 1}px]`}>
+        w-[209px] md:w-[269px] h-[419px] md:h-[539px]`}>
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row gap-[1px]">
                     {row.map((cellValue, cellIdx) => {

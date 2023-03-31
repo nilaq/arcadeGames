@@ -21,6 +21,10 @@ export interface TetrisState {
     setNextBlocks: (nextBlock: BlockType[]) => void;
     holdBlock: BlockType | null;
     setHoldBlock: (holdBlock: BlockType | null) => void;
+    uid: string | null
+    setUid: (uid: string) => void;
+    updatedScore: boolean;
+    setUpdatedScore: (updatedScore: boolean) => void;
 }
 
 export const useTetrisStore = create<TetrisState>()((set) => ({
@@ -36,5 +40,9 @@ export const useTetrisStore = create<TetrisState>()((set) => ({
     nextBlocks: [],
     setNextBlocks: (nextBlocks: BlockType[]) => set({nextBlocks: nextBlocks}),
     holdBlock: null,
-    setHoldBlock: (holdBlock: BlockType | null) => set({holdBlock: holdBlock})
+    setHoldBlock: (holdBlock: BlockType | null) => set({holdBlock: holdBlock}),
+    uid: null,
+    setUid: (uid: string) => set({uid: uid}),
+    updatedScore: false,
+    setUpdatedScore: (updatedScore: boolean) => set({updatedScore: updatedScore})
 }));

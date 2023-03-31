@@ -5,44 +5,38 @@ import {GameStatus} from "../lib/gameUtils";
 import {useTetrisStore} from "../../stores/tetrisStore";
 import Button from '../../components/buttons/Button';
 import {api} from "../../utils/api";
-import {User} from ".prisma/client";
-import trpc from "../../pages/api/trpc/[trpc]";
 
-
-// fetch IP address
-async function fetchIpAddress(): Promise<string | undefined> {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        console.error('Error fetching IP address:', error);
-    }
-}
 
 const StartScreen = () => {
 
     const {
-        setGameStatus
+        setGameStatus, setUid
     } = useTetrisStore((state) => state);
 
-    const { mutate, isLoading } = api.user.create.useMutation({
-        onSuccess: () => {
+    const { mutate, isLoading, data } = api.user.create.useMutation({
+        onSuccess: (user) => {
             console.log("User created successfully")
+            localStorage.setItem("uid", user.id);
+            setUid(user.id);
         },
         onError: (error) => {
             console.log(error.message);
         },
     });
 
-
-    /*
-    const ipAddress = await fetchIpAddress();
-    if (!ipAddress) return
-    const user = api.user.getByIpAddress.useQuery(ipAddress).data;
-    console.log(user);
+    /* simple getter
+    const { data: user } = api.user.getById.useQuery();
      */
 
+    useEffect(() => {
+        const uid = localStorage.getItem("uid");
+        // if not existens create user
+        if (uid === null) {
+            mutate({name: "Anonymous"});
+        } else {
+            setUid(uid)
+        }
+    }, [])
 
 
     return (
