@@ -96,10 +96,10 @@ const GameOverScreen = () => {
     const scoreLine = (place: string, name: string, score: string, highlight = false, key: number) => {
         const text = <>
                 <div className="flex flex-row gap-2" >
-                    <div className="w-3 text-slate-100 font-bold">{place}.</div>
-                    <div className={`text-slate-100 ${chakraPetchLight.className}`}>{name}</div>
+                    <div className="w-3 text-sm md:text-base text-slate-100 font-bold">{place}.</div>
+                    <div className={`text-sm md:text-base text-slate-100 ${chakraPetchLight.className}`}>{name}</div>
                  </div>
-                 <div className="text-slate-100 font-bold">{score}</div>
+                 <div className="text-sm md:text-base text-slate-100 font-bold">{score}</div>
             </>
 
         if (highlight) {
@@ -115,12 +115,12 @@ const GameOverScreen = () => {
     }
 
     return (
-        <div className="w-full h-full bg-slate-200 px-6 flex flex-col justify-around items-center py-6">
-            <div className="text-4xl font-bold text-slate-800">Game Over!</div>
+        <div className="w-full h-full bg-slate-200 p-3 md:p-6 flex flex-col justify-around items-center">
+            <div className="text-2xl md:text-4xl font-bold text-slate-800">Game Over!</div>
             <div className="w-full flex flex-col gap-2">
                 <Tabs defaultValue="local">
                     <div className="flex flex-row justify-between mb-1">
-                        <Title className="pl-2 text-slate-800 text-xl tracking-wider">Highscores</Title>
+                        <Title className="md:pl-2 text-slate-800 text-md md:text-xl tracking-wider">Highscores</Title>
                             <div>
                                 <TabsList>
                                     <TabsTrigger value="local" >Local</TabsTrigger>
@@ -143,14 +143,10 @@ const GameOverScreen = () => {
                 </Tabs>
                 <Input id="name-input" type="text" defaultValue={name} placeholder="name" onChange={handleNameChange}/>
             </div>
-            <div className="w-1/2 flex flex-col items-center gap-2">
-                <Button className="relative h-8 w-40 bg-slate-800">
-                    <div className="w-16 h-5 bg-slate-600 rounded-[3px] absolute top-[-8px] right-[-22px] flex flex-col justify-center items-center">
-                        <Text className={`${chakraPetchLight.className} text-xs text-slate-100`}>Watch ad</Text>
-                    </div>
-                    Continue
-                </Button>
-                <Button onClick={() => {setScore(0); setGameStatus(GameStatus.RUNNING); setUpdatedScore(false)}} className="h-8 w-40 bg-slate-700">Play again</Button>
+            <div className="flex flex-col items-center gap-2">
+                <Button className="relative h-8 bg-slate-800">Continue</Button>
+                <Button onClick={() => {setScore(0); setGameStatus(GameStatus.RUNNING); setUpdatedScore(false)}}
+                        className="h-8 w-35 bg-slate-700">Play again</Button>
             </div>
         </div>
     );

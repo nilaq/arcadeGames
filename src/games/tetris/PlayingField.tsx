@@ -4,6 +4,7 @@ import {useTetrisStore} from "../../stores/tetrisStore";
 import {GameState} from "./GameState";
 import {GameStatus, useInterval} from "../lib/gameUtils";
 import GameOverScreen from "./GameOverScreen";
+import {useSwipeable} from "react-swipeable";
 
 interface Props {
     width: number;
@@ -79,6 +80,22 @@ const PlayingField = ({width, height}: Props) => {
         }
     }
 
+    const config = {
+        delta: 10, // min distance(px) before a swipe starts
+        preventDefaultTouchmoveEvent: true, // prevent scrolling during swipes
+        trackTouch: true, // track touch input
+        trackMouse: false, // track mouse input
+        rotationAngle: 0, // set a rotation angle
+    }
+
+    const mobileHandlers = useSwipeable({
+        onSwipedLeft: () => gameState.moveLeft(),
+        onSwipedRight: () => gameState.moveRight(),
+        onTap: () => gameState.rotate(),
+        onSwipedDown: () => gameState.soft_drop(),
+        ...config
+    })
+
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => {
@@ -87,7 +104,7 @@ const PlayingField = ({width, height}: Props) => {
     }, [gameStatus])
 
     return (
-        <div id="field" className={`outline outline-1 outline-dwhite flex flex-col gap-[1px]
+        <div {...mobileHandlers} id="field" className={`outline outline-1 outline-dwhite flex flex-col gap-[1px]
         w-[209px] md:w-[269px] h-[419px] md:h-[539px]`}>
             {(gameStatus === GameStatus.RUNNING || gameStatus === GameStatus.PAUSED) && fields.map((row, rowIdx) => (
                 <div key={rowIdx} className="row flex flex-row gap-[1px]">

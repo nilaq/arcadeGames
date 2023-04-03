@@ -24,9 +24,6 @@ const StartScreen = () => {
         },
     });
 
-    /* simple getter
-    const { data: user } = api.user.getById.useQuery();
-     */
 
     useEffect(() => {
         const uid = localStorage.getItem("uid");
@@ -42,7 +39,7 @@ const StartScreen = () => {
     return (
         <div className="w-full h-full flex flex-col justify-center items-center bg-slate-900">
             <div className="flex flex-col justify-center items-center">
-                <Title className={`text-7xl pb-10 ${chakraPetch.className} text-slate-200 `}>Tetris</Title>
+                <Title className={`text-6xl md:text-7xl pb-10 ${chakraPetch.className} text-slate-200 `}>Tetris</Title>
                 <Button className="bg-slate-300 text-slate-800" onClick={() => setGameStatus(GameStatus.RUNNING)}>Start</Button>
             </div>
         </div>

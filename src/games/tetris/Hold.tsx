@@ -11,8 +11,8 @@ const Hold = () => {
 
     return (
         <div className="flex flex-col gap-[15px] items-center justify-center">
-            <Title className="text-slate-300 text-xl tracking-wider">Hold</Title>
-            <div className="h-[90px] flex flex-col justify-between items-start">
+            <Title className="text-slate-300 text-md md:text-xl tracking-wider">Hold</Title>
+            <div className="h-[70px] md:h-[90px] flex flex-col justify-between items-start">
                 {holdBlock &&
                     <div className="flex flex-row justify-center">
                         {BlockFactory.createBlock(0, 0, holdBlock).preview.map((row, i) => {
@@ -20,7 +20,7 @@ const Hold = () => {
                                 <div key={i} className="flex flex-col">
                                     {row.map((cellValue, j) => {
                                         return <div key={j}
-                                                    className={`${cellValue === 1 ? 'w-[10px] h-[10px] bg-white' : 'w-[10px] h-[10px] transparent'}`}></div>;
+                                                    className={`${cellValue === 1 ? 'w-[7px] md:w-[10px] h-[7px] md:h-[10px] bg-white' : 'w-[7px] md:w-[10px] h-[7px] md:h-[10px]'}`}></div>;
                                     })}
                                 </div>
                             )
