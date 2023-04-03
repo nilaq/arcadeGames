@@ -53,8 +53,8 @@ const Tetris = () => {
                 <StartScreen></StartScreen>
             }
             {gameStatus !== GameStatus.LOADED &&
-                <div className="w-full h-full flex flex-col justify-center items-center bg-slate-900">
-                    <div className="flex flex-col justify-center items-center gap-8">
+                <div className="w-full h-screen md:h-full flex flex-col justify-center items-center bg-slate-900">
+                    <div className="flex flex-col justify-center items-center gap-3 md:gap-8">
                         <Title className={`text-5xl md:text-6xl ${chakraPetch.className} text-slate-300 `}>Tetris</Title>
                         <div className="flex flex-row justify-center gap-0 items-start">
                             <div className="mr-4 md:mr-9 h-full w-16 md:w-32 flex flex-col items-end justify-between">
